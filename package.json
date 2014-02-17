@@ -1,7 +1,7 @@
 {
   "name": "pull-stringify",
-  "description": "",
-  "version": "0.0.0",
+  "description": "JSON.stringify as pull-stream",
+  "version": "1.0.0",
   "homepage": "https://github.com/dominictarr/pull-stringify",
   "repository": {
     "type": "git",
