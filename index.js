@@ -11,7 +11,7 @@ module.exports = function stringify () {
         }
         else {
           ended = true
-          cb(null, ']\n')
+          cb(null, first ? '[]\n' : ']\n')
         }
       })
     }
