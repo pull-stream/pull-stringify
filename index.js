@@ -1,4 +1,13 @@
-module.exports = function stringify () {
+
+function def(op, value) {
+  return op == null ? value : op
+}
+module.exports = function stringify (op, cl, sp, indent) {
+  op     = def(op, '[')
+  cl     = def(cl, ']\n')
+  sp     = def(sp, ',\n')
+  indent = def(indent, 2)
+
   var first = true, ended
   return function (read) {
     return function (end, cb) {
@@ -7,14 +16,18 @@ module.exports = function stringify () {
         if(!end) {
           var f = first
           first = false
-          cb(null, (f ? '[' : ',\n')+ JSON.stringify(data, null, 2))
+          cb(null, (f ? op : sp)+ JSON.stringify(data, null, indent))
         }
         else {
           ended = true
-          cb(null, first ? '[]\n' : ']\n')
+          cb(null, first ? op+cl : cl)
         }
       })
     }
   }
 }
 
+
+module.exports.ldjson = function () {
+  return module.exports('','','\n', 0)
+}
