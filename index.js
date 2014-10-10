@@ -29,5 +29,5 @@ module.exports = function stringify (op, cl, sp, indent) {
 
 module.exports.lines =
 module.exports.ldjson = function () {
-  return module.exports('','','\n', 0)
+  return module.exports('','\n','\n', 0)
 }
