@@ -21,7 +21,8 @@ module.exports = function stringify (op, cl, sp, indent, stringify) {
           cb(null, (f ? op : sp)+ stringify(data, null, indent))
         }
         else {
-          ended = true
+          ended = end
+          if(ended !== true) return cb(ended)
           cb(null, first ? op+cl : cl)
         }
       })
