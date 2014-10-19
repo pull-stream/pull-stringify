@@ -17,7 +17,6 @@ pull(
 `pull-stringify` takes the same arguments as
 [JSONStream.stringify](https://github.com/dominictarr/JSONStream#jsonstreamstringifyopen-sep-close) but as a pull stream.
 
-
 Also if you want line separated json, a default is provided:
 
 ``` js
@@ -28,6 +27,18 @@ pull(
 )
 ```
 
+to use a non-custom stringifyer use the final argument.
+
+``` js
+//compatible with JSON but supports buffers.
+var JSONB = require('json-buffer')
+
+//use defaults for op, cl, and sep
+stringify(null, null, null, JSONB.stringify)
+
+//or
+stringify.lines(JSONB.stringify)
+```
 ## License
 
 MIT
