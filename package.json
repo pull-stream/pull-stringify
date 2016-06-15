@@ -7,10 +7,18 @@
     "type": "git",
     "url": "git://github.com/dominictarr/pull-stringify.git"
   },
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "defined": "^1.0.0"
+  },
+  "devDependencies": {
+    "pull-pushable": "^2.0.0",
+    "pull-split": "^0.2.0",
+    "pull-stream": "^3.4.2",
+    "standard": "^7.1.2",
+    "tape": "^4.5.1"
+  },
   "scripts": {
-    "test": "set -e; for t in test/*.js; do node $t; done"
+    "test": "standard && tape test.js"
   },
   "author": "Dominic Tarr <dominic.tarr@gmail.com> (dominictarr.com)",
   "license": "MIT"

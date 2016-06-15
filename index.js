@@ -1,29 +1,36 @@
+var defined = require('defined')
 
-function def(op, value) {
-  return op == null ? value : op
-}
-module.exports = function stringify (op, cl, sp, indent, stringify) {
-  stringify = stringify || JSON.stringify
+module.exports = pullStringify
 
-  op     = def(op, '[')
-  cl     = def(cl, ']\n')
-  sp     = def(sp, ',\n')
-  indent = def(indent, 2)
+function pullStringify (options) {
+  options = defined(options, {})
 
-  var first = true, ended
+  // default is pretty double newline delimited json
+  var open = defined(options.open, '')
+  var separator = defined(options.separator, '\n\n')
+  var close = defined(options.close, '')
+  var indent = defined(options.indent, 2)
+  var prepend = defined(options.prepend, false)
+  var stringify = defined(options.stringify, JSON.stringify)
+
+  var first = true
+  var ended
   return function (read) {
     return function (end, cb) {
-      if(ended) return cb(ended)
+      if (ended) return cb(ended)
       read(null, function (end, data) {
-        if(!end) {
-          var f = first
+        if (!end) {
+          var prefix = first ? open
+            : prepend ? separator : ''
+          var suffix = prepend ? '' : separator
+          var string = stringify(data, null, indent)
           first = false
-          cb(null, (f ? op : sp)+ stringify(data, null, indent))
-        }
-        else {
+
+          cb(null, prefix + string + suffix)
+        } else {
           ended = end
-          if(ended !== true) return cb(ended)
-          cb(null, first ? op+cl : cl)
+          if (ended !== true) return cb(ended)
+          cb(null, first ? open + close : close)
         }
       })
     }
@@ -32,5 +39,21 @@ module.exports = function stringify (op, cl, sp, indent, stringify) {
 
 module.exports.lines =
 module.exports.ldjson = function (stringify) {
-  return module.exports('','\n','\n', 0, stringify)
+  return pullStringify({
+    open: '',
+    close: '',
+    separator: '\n',
+    indent: 0,
+    stringify: stringify
+  })
+}
+
+module.exports.array = function () {
+  return pullStringify({
+    open: '[',
+    close: ']\n',
+    separator: ',\n',
+    indent: 2,
+    prepend: true
+  })
 }
