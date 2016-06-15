@@ -7,10 +7,10 @@ function pullStringify (options) {
 
   // default is pretty double newline delimited json
   var open = defined(options.open, '')
-  var separator = defined(options.separator, '\n\n')
+  var prefix = defined(options.prefix, '')
+  var suffix = defined(options.suffix, '\n\n')
   var close = defined(options.close, '')
   var indent = defined(options.indent, 2)
-  var prepend = defined(options.prepend, false)
   var stringify = defined(options.stringify, JSON.stringify)
 
   var first = true
@@ -20,13 +20,11 @@ function pullStringify (options) {
       if (ended) return cb(ended)
       read(null, function (end, data) {
         if (!end) {
-          var prefix = first ? open
-            : prepend ? separator : ''
-          var suffix = prepend ? '' : separator
-          var string = stringify(data, null, indent)
+          var f = first
           first = false
 
-          cb(null, prefix + string + suffix)
+          var string = stringify(data, null, indent)
+          cb(null, (f ? open : prefix) + string + suffix)
         } else {
           ended = end
           if (ended !== true) return cb(ended)
@@ -40,20 +38,19 @@ function pullStringify (options) {
 module.exports.lines =
 module.exports.ldjson = function (stringify) {
   return pullStringify({
-    open: '',
-    close: '',
-    separator: '\n',
+    suffix: '\n',
     indent: 0,
     stringify: stringify
   })
 }
 
-module.exports.array = function () {
+module.exports.array = function (stringify) {
   return pullStringify({
     open: '[',
+    prefix: ',\n',
+    suffix: '',
     close: ']\n',
-    separator: ',\n',
     indent: 2,
-    prepend: true
+    stringify: stringify
   })
 }

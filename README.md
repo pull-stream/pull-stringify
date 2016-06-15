@@ -25,10 +25,10 @@ pull(
 `options` is an object with the following optional keys:
 
 - `open`: string to be prepended to first output string
-- `close`: string to be appended to last output string
+- `prefix`: string to be prepended to every non-first output string
+- `suffix`: string to be appended to every output string
+- `close`: string to be appended after stream is complete
 - `indent`: passed as third argument to `JSON.stringify`
-- `separator`: string to be (ap|pre)pended to every other output string
-- `prepend`: if `true` prepend separator, otherwise append separator
 - `stringify`: custom function to use instead of `JSON.stringify`
 
 `stringify(options)` returns a through [`pull-stream`](https://pull-stream.github.io).
@@ -38,30 +38,28 @@ defaults options are for [double newline delimited json](https://github.com/domi
 ```js
 {
   open: '',
-  separator: '\n\n',
+  prefix: '',
+  suffix: '\n\n',
   close: '',
   indent: 2,
-  prepend: false,
   stringify: JSON.stringify
 }
 ```
 
-### `stringify.ldjson(stringifier)`
+### `stringify.ldjson(stringify)`
 
-### `stringify.lines(stringifier)`
+### `stringify.lines(stringify)`
 
 for single newline delimited json use `stringify.ldjson()` or `stringify.lines()`:
 
 ```js
 {
-  open: '',
-  separator: '\n',
-  close: '',
+  suffix: '\n',
   indent: 0
 }
 ```
 
-you can pass a custom stringifier as an argument.
+you can pass a custom stringify as an argument.
 
 ```js
 // compatible with JSON but supports buffers.
@@ -75,7 +73,7 @@ stringify.lines(JSONB.stringify)
 ```
 
 
-### `stringify.array()`
+### `stringify.array(stringify)`
 
 for a single json array use `stringify.array()`
 
@@ -84,8 +82,7 @@ for a single json array use `stringify.array()`
   open: '[',
   separator: ',\n',
   close: ']\n',
-  indent: 2,
-  prepend: true
+  indent: 2
 }
 ```
 
