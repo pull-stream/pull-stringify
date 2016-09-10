@@ -8,7 +8,7 @@ var stringify = require('pull-stringify')
 var toPull = require('stream-to-pull-stream')
 
 pull(
-  pull.value([A, B, C]),
+  pull.values([A, B, C]),
   stringify(),
   toPull(process.stdout)
 )
@@ -21,7 +21,7 @@ Also if you want line separated json, a default is provided:
 
 ``` js
 pull(
-  pull.value([A, B, C]),
+  pull.values([A, B, C]),
   stringify.lines(),
   toPull(process.stdout)
 )
