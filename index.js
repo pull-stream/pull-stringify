@@ -13,13 +13,12 @@ function pullStringify (options) {
   var indent = defined(options.indent, 2)
   var stringify = defined(options.stringify, JSON.stringify)
 
-  var first = true
-  var ended
+  var first = true, ended
   return function (read) {
     return function (end, cb) {
-      if (ended) return cb(ended)
+      if(ended) return cb(ended)
       read(null, function (end, data) {
-        if (!end) {
+        if(!end) {
           var f = first
           first = false
 
@@ -27,7 +26,7 @@ function pullStringify (options) {
           cb(null, (f ? open : prefix) + string + suffix)
         } else {
           ended = end
-          if (ended !== true) return cb(ended)
+          if(ended !== true) return cb(ended)
           cb(null, first ? open + close : close)
         }
       })

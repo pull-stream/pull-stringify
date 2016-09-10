@@ -14,11 +14,10 @@
     "pull-pushable": "^2.0.0",
     "pull-split": "^0.2.0",
     "pull-stream": "^3.4.2",
-    "standard": "^7.1.2",
     "tape": "^4.5.1"
   },
   "scripts": {
-    "test": "standard && tape test.js"
+    "test": "tape test.js"
   },
   "author": "Dominic Tarr <dominic.tarr@gmail.com> (dominictarr.com)",
   "license": "MIT"
