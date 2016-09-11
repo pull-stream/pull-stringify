@@ -1,14 +1,17 @@
+var defined = require('defined')
 
-function def(op, value) {
-  return op == null ? value : op
-}
-module.exports = function stringify (op, cl, sp, indent, stringify) {
-  stringify = stringify || JSON.stringify
+module.exports = pullStringify
 
-  op     = def(op, '[')
-  cl     = def(cl, ']\n')
-  sp     = def(sp, ',\n')
-  indent = def(indent, 2)
+function pullStringify (options) {
+  options = defined(options, {})
+
+  // default is pretty double newline delimited json
+  var open = defined(options.open, '')
+  var prefix = defined(options.prefix, '')
+  var suffix = defined(options.suffix, '\n\n')
+  var close = defined(options.close, '')
+  var indent = defined(options.indent, 2)
+  var stringify = defined(options.stringify, JSON.stringify)
 
   var first = true, ended
   return function (read) {
@@ -18,12 +21,13 @@ module.exports = function stringify (op, cl, sp, indent, stringify) {
         if(!end) {
           var f = first
           first = false
-          cb(null, (f ? op : sp)+ stringify(data, null, indent))
-        }
-        else {
+
+          var string = stringify(data, null, indent)
+          cb(null, (f ? open : prefix) + string + suffix)
+        } else {
           ended = end
           if(ended !== true) return cb(ended)
-          cb(null, first ? op+cl : cl)
+          cb(null, first ? open + close : close)
         }
       })
     }
@@ -32,5 +36,20 @@ module.exports = function stringify (op, cl, sp, indent, stringify) {
 
 module.exports.lines =
 module.exports.ldjson = function (stringify) {
-  return module.exports('','\n','\n', 0, stringify)
+  return pullStringify({
+    suffix: '\n',
+    indent: 0,
+    stringify: stringify
+  })
+}
+
+module.exports.array = function (stringify) {
+  return pullStringify({
+    open: '[',
+    prefix: ',\n',
+    suffix: '',
+    close: ']\n',
+    indent: 2,
+    stringify: stringify
+  })
 }
